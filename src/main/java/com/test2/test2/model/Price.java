@@ -16,15 +16,13 @@ public class Price {
     @Column(name = "price")
     private Long price;
 
+    //левая включая
     @Column(name = "start_date")
     private Date start_date;
 
+    //правая исключая
     @Column(name = "end_date")
     private Date end_date;
-
-
-    @Column(name = "creation_date")
-    private Date creation_date;
 
     public Long getProduct_id() {
         return product_id;
@@ -40,14 +38,6 @@ public class Price {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Date getCreation_date() {
-        return creation_date;
-    }
-
-    public void setCreation_date(Date creation_date) {
-        this.creation_date = creation_date;
     }
 
     public Long getPrice() {
@@ -72,5 +62,9 @@ public class Price {
 
     public void setEnd_date(Date end_date) {
         this.end_date = end_date;
+    }
+
+    public boolean intersect(Price price){
+        return false;
     }
 }

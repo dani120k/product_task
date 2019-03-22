@@ -11,20 +11,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Price> priceList;
-
-    public List<Price> getPriceList() {
-        return priceList;
-    }
-
-    public void setPriceList(List<Price> priceList) {
-        this.priceList = priceList;
-    }
-
 
     public String getName() {
         return name;
