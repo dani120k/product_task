@@ -49,10 +49,8 @@ public class ProductHandler {
         try {
             Date findDate = sdf.parse(sdf.format(new Date()));
             if (date != null) {
-                String pattern = "yyyy-MM-dd";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                 try {
-                    findDate = simpleDateFormat.parse(date);
+                    findDate = sdf.parse(date);
                     findDate.setHours(3);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -62,7 +60,7 @@ public class ProductHandler {
             for (Product p : products) {
                 Price price = priceService.findPriceForDate(findDate, p.getId());
                 if (price!=null) {
-                    builder.append(p.getName() + " " + price.getPrice() + " " + findDate.toString());
+                    builder.append(p.getName()).append(" ").append(price.getPrice()).append(" ").append(findDate.toString());
                     builder.append("\n");
                 }
 

@@ -21,6 +21,9 @@ public class PriceHandler {
 
     public String addNew(Price price, String productName){
         Product product = productService.findByName(productName);
+        if (product == null)
+            return "Product with this name doesnt exist";
+
         price.setProduct_id(product.getId());
         refreshPrices(price);
         Price addedPrice = priceService.add(price);
