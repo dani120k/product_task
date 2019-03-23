@@ -17,19 +17,7 @@ public class ProductServiceImpl {
     }
 
     public Product add(Product product){
-        try {
             return repository.save(product);
-        } catch (Exception ex){
-            return null;
-        }
-    }
-
-    public Product update(Product product){
-        try{
-            return repository.save(product);
-        }catch (Exception ex){
-            return null;
-        }
     }
 
     public void deletePerson(Product product){

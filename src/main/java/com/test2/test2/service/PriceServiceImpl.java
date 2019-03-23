@@ -17,11 +17,7 @@ public class PriceServiceImpl {
     }
 
     public Price add(Price price){
-        try {
-            return repository.save(price);
-        } catch (Exception ex){
-            return null;
-        }
+        return repository.save(price);
     }
 
     public void deletePrice(Price price){
