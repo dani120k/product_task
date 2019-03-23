@@ -1,6 +1,7 @@
 package com.test2.test2.handlers;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test2.test2.model.Price;
 import com.test2.test2.model.Product;
 import com.test2.test2.service.PriceServiceImpl;
@@ -27,15 +28,16 @@ public class PriceHandler {
         price.setProduct_id(product.getId());
         refreshPrices(price);
         Price addedPrice = priceService.add(price);
+
         if (addedPrice !=null) {
-            return new Gson().toJson(addedPrice);
+            try {
+                return new ObjectMapper().writeValueAsString(addedPrice);
+            } catch (JsonProcessingException ex){
+                return "Error when trying to create Json";
+            }
         }
         else
             return "Some error when create this price";
-    }
-
-    public String getAllPrices(){
-        return new Gson().toJson(priceService.getAll());
     }
 
     private void updatePrice(Price p, Long intersect_left, Long intersect_right, Long curr_left, Long curr_right){

@@ -1,6 +1,7 @@
 package com.test2.test2.handlers;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test2.test2.model.Price;
 import com.test2.test2.model.Product;
 import com.test2.test2.service.PriceServiceImpl;
@@ -20,17 +21,25 @@ public class ProductHandler {
     @Autowired
     PriceServiceImpl priceService;
 
-    public String getAllProduct(){
-        List<Product> products = productService.getAll();
-        return new Gson().toJson(products);
-    }
-
     public String addNewProduct(Product product){
         Product addedProduct = productService.add(product);
-        if (addedProduct !=null)
-            return new Gson().toJson(addedProduct);
+        if (addedProduct !=null){
+            try {
+                String response = new ObjectMapper().writeValueAsString(addedProduct);
+                return response;
+            } catch (JsonProcessingException ex){
+                return "Problem when trying to create Json";
+            }
+        }
         else
-            return new Gson().toJson("Product with this name is already exist");
+        {
+            try {
+                String response = new ObjectMapper().writeValueAsString("Product with this name is already exist");
+                return response;
+            } catch (JsonProcessingException ex){
+                return "Problem when trying to create Json";
+            }
+        }
     }
 
     public String deleteProduct(String name){

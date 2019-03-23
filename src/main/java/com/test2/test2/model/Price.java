@@ -1,5 +1,7 @@
 package com.test2.test2.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,10 +19,12 @@ public class Price {
     private Long price;
 
     //левая включая
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "start_date")
     private Date start_date;
 
     //правая исключая
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "end_date")
     private Date end_date;
 
