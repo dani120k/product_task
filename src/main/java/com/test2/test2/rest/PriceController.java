@@ -14,7 +14,7 @@ public class PriceController {
     @Autowired
     private PriceHandler priceHandler;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/add/{name}")
+    @RequestMapping(method = RequestMethod.POST, value = "/add/{name}")
     public ResponseEntity<String> createPrice(@PathVariable String name, @RequestParam("price") Long price, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date){
         return priceHandler.addNew(name, price, start_date, end_date);
     }
