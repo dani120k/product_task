@@ -11,12 +11,6 @@ public class PriceController {
     @Autowired
     private PriceHandler priceHandler;
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "/getAll")
-    public String getAllPrices(){
-        return priceHandler.getAllPrices();
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public String createPrice(@RequestBody Price price, @RequestParam String productName){
         return priceHandler.addNew(price, productName);

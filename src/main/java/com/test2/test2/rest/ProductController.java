@@ -1,6 +1,5 @@
 package com.test2.test2.rest;
 
-
 import com.test2.test2.handlers.ProductHandler;
 import com.test2.test2.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,8 @@ public class ProductController {
     @Autowired
     ProductHandler productHandler;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getAll")
-    public String getAll(){
-        return productHandler.getAllProduct();
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/add")
-    public String add(@RequestBody Product product){
+    public String createProduct(@RequestBody Product product){
         return productHandler.addNewProduct(product);
     }
 
