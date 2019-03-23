@@ -10,7 +10,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"name":"�
 
 Создание цены
 
-curl --header "Content-T" --request POST --data '{"price":цена, "start_date":"2028-12-24", "end_date":"2029-12-24"}'  http://localhost:8080/price/add?productName=имя_продукта
+curl --header "Content-Type: application/json" --request POST --data '{"price":цена, "start_date":"2028-12-24", "end_date":"2029-12-24"}'  http://localhost:8080/price/add?productName=имя_продукта
 
 для открытого интервала просто не прописывать дату
 
