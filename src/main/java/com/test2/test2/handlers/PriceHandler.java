@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PriceHandler {
@@ -21,11 +22,11 @@ public class PriceHandler {
     private ProductServiceImpl productService;
 
     public String addNew(Price price, String productName){
-        Product product = productService.findByName(productName);
-        if (product == null)
+        Optional<Product> product = productService.findByName(productName);
+        if (!product.isPresent())
             return "Product with this name doesnt exist";
 
-        price.setProduct_id(product.getId());
+        price.setProductId(product.get().getId());
         refreshPrices(price);
         Price addedPrice = priceService.add(price);
 
@@ -63,7 +64,7 @@ public class PriceHandler {
                     priceService.add(p);
                     Price newPrice = new Price();
                     newPrice.setPrice(p.getPrice());
-                    newPrice.setProduct_id(p.getProduct_id());
+                    newPrice.setProductId(p.getProductId());
                     if (intersect_right!=-1)
                         newPrice.setStart_date(new Date(intersect_right));
                     if (curr_right != Long.MAX_VALUE)
@@ -76,7 +77,7 @@ public class PriceHandler {
     }
 
     private void refreshPrices(Price price){
-        List<Price> prices = priceService.getByProductId(price.getProduct_id());
+        List<Price> prices = priceService.getByProductId(price.getProductId());
         Long left_border = (price.getStart_date()== null) ? -1 : price.getStart_date().getTime();
         Long right_border = (price.getEnd_date() == null) ? Long.MAX_VALUE : price.getEnd_date().getTime();
         for (Price p : prices){

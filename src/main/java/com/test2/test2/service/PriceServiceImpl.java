@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PriceServiceImpl {
@@ -27,7 +28,7 @@ public class PriceServiceImpl {
         repository.delete(price);
     }
 
-    public Price findPriceForDate(Date date, Long id){return repository.findPriceForDate(date, id);}
+    public Optional<Price> findPriceForDate(Date date, Long id){return repository.findPriceForDate(date, id);}
 
     public List<Price> getByProductId(Long id){return repository.findByProductId(id);
     }

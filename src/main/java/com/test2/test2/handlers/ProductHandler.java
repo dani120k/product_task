@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductHandler {
@@ -43,13 +44,13 @@ public class ProductHandler {
     }
 
     public String deleteProduct(String name){
-        try {
-            Product deletedProduct = productService.findByName(name);
-            productService.deletePerson(deletedProduct);
-        } catch (Exception ex){
-            return "Some problem when delete product";
+        Optional<Product> deletedProduct = productService.findByName(name);
+        if (deletedProduct.isPresent()) {
+            productService.deletePerson(deletedProduct.get());
+            return "Product with name " + name + " was deleted";
         }
-        return "Product with name " + name + " was deleted";
+        else
+            return "Product with name " + name + " doesnt exist";
     }
 
     public String getCurrentPrices(String date){
@@ -67,12 +68,11 @@ public class ProductHandler {
             }
             List<Product> products = productService.getAll();
             for (Product p : products) {
-                Price price = priceService.findPriceForDate(findDate, p.getId());
-                if (price!=null) {
-                    builder.append(p.getName()).append(" ").append(price.getPrice()).append(" ").append(findDate.toString());
+                Optional<Price> price = priceService.findPriceForDate(findDate, p.getId());
+                if (price.isPresent()) {
+                    builder.append(p.getName()).append(" ").append(price.get().getPrice()).append(" ").append(findDate.toString());
                     builder.append("\n");
                 }
-
             }
         }
         catch (Exception ex){
