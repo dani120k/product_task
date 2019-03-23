@@ -6,14 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/price")
 public class PriceController {
     @Autowired
     private PriceHandler priceHandler;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/add")
-    public ResponseEntity<String> createPrice(@RequestBody Price price, @RequestParam String productName){
-        return priceHandler.addNew(price, productName);
+    @RequestMapping(method = RequestMethod.GET, value = "/add/{name}")
+    public ResponseEntity<String> createPrice(@PathVariable String name, @RequestParam("price") Long price, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date){
+        return priceHandler.addNew(name, price, start_date, end_date);
     }
 }

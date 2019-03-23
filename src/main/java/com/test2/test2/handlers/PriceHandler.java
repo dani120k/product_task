@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,17 +25,35 @@ public class PriceHandler {
     @Autowired
     private ProductServiceImpl productService;
 
-    public ResponseEntity<String> addNew(Price price, String productName){
-        Optional<Product> product = productService.findByName(productName);
+    public ResponseEntity<String> addNew(String name, Long price, String start_date, String end_date){
+        Optional<Product> product = productService.findByName(name);
         if (!product.isPresent())
             return new ResponseEntity<>("Product with this name doesn't exist", HttpStatus.NOT_FOUND);
 
-        price.setProductId(product.get().getId());
-        refreshPrices(price);
+        Price addPrice = new Price();
+        addPrice.setPrice(price);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            if (start_date!=null){
+                Date sd = sdf.parse(start_date);
+                sd.setHours(3);
+                addPrice.setStart_date(sdf.parse(start_date));
+            }
+
+            if (end_date!=null){
+                Date sd = sdf.parse(end_date);
+                sd.setHours(3);
+                addPrice.setEnd_date(sdf.parse(end_date));
+            }
+        } catch (ParseException ex){
+            return new ResponseEntity<>("Unable to parse input date", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        addPrice.setProductId(product.get().getId());
+        refreshPrices(addPrice);
 
         try {
-            priceService.add(price);
-            return new ResponseEntity<>(new ObjectMapper().writeValueAsString(price), HttpStatus.OK);
+            priceService.add(addPrice);
+            return new ResponseEntity<>(new ObjectMapper().writeValueAsString(addPrice), HttpStatus.OK);
         } catch (JsonProcessingException ex){
             return new ResponseEntity<>("Error when trying to create Json", HttpStatus.INTERNAL_SERVER_ERROR);
         }

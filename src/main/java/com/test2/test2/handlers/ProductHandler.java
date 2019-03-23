@@ -7,10 +7,12 @@ import com.test2.test2.model.Product;
 import com.test2.test2.service.PriceServiceImpl;
 import com.test2.test2.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,17 +27,19 @@ public class ProductHandler {
     PriceServiceImpl priceService;
 
     public ResponseEntity<String> addNewProduct(Product product){
-        Product addedProduct = productService.add(product);
-        if (addedProduct !=null){
-            try {
+        try {
+            Product addedProduct = productService.add(product);
+            if (addedProduct !=null) {
                 String response = new ObjectMapper().writeValueAsString(addedProduct);
                 return new ResponseEntity<>(response, HttpStatus.OK);
-            } catch (JsonProcessingException ex){
-                return new ResponseEntity<>("Error when trying to create Json", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-        else
+        } catch (JsonProcessingException ex){
+        return new ResponseEntity<>("Error when trying to create Json", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (DataAccessException ex){
             return new ResponseEntity<>("Product with this name is already exist", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        return new ResponseEntity<>("Something go wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity<String> deleteProduct(String name){
