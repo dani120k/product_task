@@ -3,18 +3,15 @@ package com.test2.test2.service;
 import com.test2.test2.model.Price;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
 import java.util.Date;
 import java.util.List;
 
 public interface PriceService extends CrudRepository<Price, Long> {
-    @Query(value = "SELECT * " +
-            "FROM price " +
-            "WHERE product_id = (?2) AND ((start_date <= (?1) AND end_date is NULL) OR (end_date > (?1) AND  start_date is NULL) OR (start_date <=(?1) AND end_date >(?1)) OR (start_date is NULL AND end_date is NULL)) " +
-            "LIMIT 1", nativeQuery = true)
-    Price findPriceForDate(Date date, Long id);
+    @Query(value = "SELECT p FROM Price p " +
+            "WHERE p.productId = :id AND (p.start_date IS NULL OR p.start_date <= :date) AND (p.end_date IS NULL OR p.end_date > :date)")
+    Price findPriceForDate(@Param("date") Date date, @Param("id") Long id);
 
-    @Query(value = "SELECT * " +
-            "FROM price " +
-            "WHERE product_id = (?1)", nativeQuery = true)
-    List<Price> getByProductId(Long id);
+    List<Price> findByProductId(Long id);
 }

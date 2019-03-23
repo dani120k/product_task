@@ -8,7 +8,6 @@ import java.util.List;
 
 @Service
 public class PriceServiceImpl {
-
     @Autowired
     private PriceService repository;
 
@@ -30,7 +29,7 @@ public class PriceServiceImpl {
 
     public Price findPriceForDate(Date date, Long id){return repository.findPriceForDate(date, id);}
 
-    public List<Price> getByProductId(Long id){return repository.getByProductId(id);
+    public List<Price> getByProductId(Long id){return repository.findByProductId(id);
     }
 
 }

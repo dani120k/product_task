@@ -4,6 +4,7 @@ import com.test2.test2.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl {
@@ -35,6 +36,6 @@ public class ProductServiceImpl {
         repository.delete(product);
     }
 
-    public Product findByName(String name){return repository.findByName(name);}
+    public Optional<Product> findByName(String name){return repository.findOneByName(name);}
 
 }

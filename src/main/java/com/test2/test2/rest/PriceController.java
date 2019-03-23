@@ -14,6 +14,5 @@ public class PriceController {
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public String createPrice(@RequestBody Price price, @RequestParam String productName){
         return priceHandler.addNew(price, productName);
-
     }
 }
