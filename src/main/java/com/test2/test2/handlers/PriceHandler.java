@@ -7,6 +7,8 @@ import com.test2.test2.model.Product;
 import com.test2.test2.service.PriceServiceImpl;
 import com.test2.test2.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,24 +23,20 @@ public class PriceHandler {
     @Autowired
     private ProductServiceImpl productService;
 
-    public String addNew(Price price, String productName){
+    public ResponseEntity<String> addNew(Price price, String productName){
         Optional<Product> product = productService.findByName(productName);
         if (!product.isPresent())
-            return "Product with this name doesnt exist";
+            return new ResponseEntity<>("Product with this name doesn't exist", HttpStatus.NOT_FOUND);
 
         price.setProductId(product.get().getId());
         refreshPrices(price);
-        Price addedPrice = priceService.add(price);
 
-        if (addedPrice !=null) {
-            try {
-                return new ObjectMapper().writeValueAsString(addedPrice);
-            } catch (JsonProcessingException ex){
-                return "Error when trying to create Json";
-            }
+        try {
+            priceService.add(price);
+            return new ResponseEntity<>(new ObjectMapper().writeValueAsString(price), HttpStatus.OK);
+        } catch (JsonProcessingException ex){
+            return new ResponseEntity<>("Error when trying to create Json", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        else
-            return "Some error when create this price";
     }
 
     private void updatePrice(Price p, Long intersect_left, Long intersect_right, Long curr_left, Long curr_right){

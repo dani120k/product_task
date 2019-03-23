@@ -7,6 +7,8 @@ import com.test2.test2.model.Product;
 import com.test2.test2.service.PriceServiceImpl;
 import com.test2.test2.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -22,38 +24,31 @@ public class ProductHandler {
     @Autowired
     PriceServiceImpl priceService;
 
-    public String addNewProduct(Product product){
+    public ResponseEntity<String> addNewProduct(Product product){
         Product addedProduct = productService.add(product);
         if (addedProduct !=null){
             try {
                 String response = new ObjectMapper().writeValueAsString(addedProduct);
-                return response;
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (JsonProcessingException ex){
-                return "Problem when trying to create Json";
+                return new ResponseEntity<>("Error when trying to create Json", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         else
-        {
-            try {
-                String response = new ObjectMapper().writeValueAsString("Product with this name is already exist");
-                return response;
-            } catch (JsonProcessingException ex){
-                return "Problem when trying to create Json";
-            }
-        }
+            return new ResponseEntity<>("Product with this name is already exist", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    public String deleteProduct(String name){
+    public ResponseEntity<String> deleteProduct(String name){
         Optional<Product> deletedProduct = productService.findByName(name);
         if (deletedProduct.isPresent()) {
             productService.deletePerson(deletedProduct.get());
-            return "Product with name " + name + " was deleted";
+            return new ResponseEntity<>("Product with name " + name + " was deleted", HttpStatus.OK);
         }
         else
-            return "Product with name " + name + " doesnt exist";
+            return new ResponseEntity<>("Product with name " + name + " doesn't exist", HttpStatus.NOT_FOUND);
     }
 
-    public String getCurrentPrices(String date){
+    public ResponseEntity<String> getCurrentPrices(String date){
         StringBuilder builder = new StringBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -76,8 +71,8 @@ public class ProductHandler {
             }
         }
         catch (Exception ex){
-            ex.printStackTrace();
+            return new ResponseEntity<>("Error when trying to get prices", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return builder.toString();
+        return new ResponseEntity<>(builder.toString(), HttpStatus.OK);
     }
 }
